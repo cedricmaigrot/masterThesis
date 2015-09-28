@@ -1,0 +1,40 @@
+%%%%%%%%%%%%%%%%%%%%%%%
+%%   chapitre PROTOCOL EXPERIMENTAL
+%%%%%%%%%%%%%%%%%%%%%%%
+\section{Protocol expérimental}\label{protocole}
+
+L'objectif de ces expérimentations est double.
+% Tout d'abord nous nous sommes assurés du bon fonctionnement de l'algorithme de \emph{concept drift} sur un jeu synthétique de la littérature (SEA, \cite{Street2001}) pour évaluer ses performances pour différentes types de dérives (travaux non présentés dans cet article par manque de place). Nous avons ensuite expérimenté sur un jeu de données réelles, en récupérant des messages issus de groupes de paroles à risque de Facebook et de mails fournis par l'association  \textit{OADI}.
+
+
+\subsection{Données utilisées}
+Cette étude a porté sur l'analyse de messages écrits par des populations à risque. Pour cela, nous avons commencé par utiliser des messages fournis par l'association \textit{OADI} qui travaille avec des victimes de harcellement. Nous nous sommes ensuite intéressé à des messages directements issus de groupes Facebook que nous avons récoltés via l'API Facebook\footnote{http://developers.facebook.com}.
+
+Nous avons sélectionné plusieurs groupes ayant pour thématique un ou plusieurs facteurs de risque connus pour le suicide (\emph{suicide}, \emph{anorexie}, \emph{mutilation} ou \emph{harcèlement}). Les auteurs sont généralement des adolescents entre $13$ et $18$ ans. Il est important de noter que ces groupes comprennent aussi des adultes dans la situation d'anciennes victimes  qui viennent témoigner de leur expérience dans ces groupes. Il est aussi possible de trouver des messages de parents ou de proches qui viennent demander des conseils pour leur enfant possiblement harcelé. Nous avons récolté 4597 messages entre le 15 Mars 2015 et le 3 Juin 2015.
+
+Dans le cadre de nos expérimentations, nous avons sélectionné manuellement 22 comptes ayant entre 3 et 14 messages postés sur les groupes. Ils respectent les conditions suivantes : 1) L'auteur est une personne à risque; 2) La personne évoque son bien/mal-être; 3) La personne n'est pas un modérateur du groupe (les messages d'administrations pouvant fausser l'analyse). Nous avons alors obtenu 141 messages.
+
+L'association \emph{OADI} %\footnote{Organisme Arret Demandé Internatial, http://oadi.education/} qui est un organisme d'aide aux personnes harcelées. Les messages sont accompagnées d'un niveau de risque estimé par le personnel de l'organisme. L'organisme utilise un système à $4$ niveaux : 
+nous a également fourni un protocole utilisé par les volontaires pour détecter le niveau d'urgence. Nous l'avons adapté à notre cas d'étude qui ne se limite pas au cas des personnes harcellées. Nous considérons 5 degrés d'urgence :1) \emph{Pas d'urgence} : Il n'y a aucune urgence à traiter le message de la personne;
+2) \emph{Risque minimal} : Le problème de la personne se situe dans le passé. Cette situation  est encore difficilement supportable pour la personne, elle estime que sa parole doit être libérée;
+3) \emph{Risque intermédiaire} : La personne a un problème. L'isolement commence à s'installer;
+4) \emph{Risque important} :  La personne a un problème durable pouvant inclure de la violence. Un isolement important s'installe;
+5) \emph{Risque absolu} : La personne est violente verbalement et/ou physiquement. Elle tient des propos suicidaires et/ou se met en danger elle-même.
+
+Les 168 messages ont été annotés manuellement par trois personnes. Chaque message a reçu au total 13 annotations : présence ou abscence des 12 concepts et un niveau de risque. Le kappa de Fleiss donne une valeur de 0,563 pour les cinq niveaux de risque.
+
+\subsection{Évaluations}
+\subsubsection{Détection du niveau de risque}
+Lors de l'étape 1 du module 2 pour détecter les concepts dans un message, nous avons souhaité favoriser une bonne classification des messages possédant un concept. %afin de ne jamais sous-estimé la gravité d'un message. 
+L'objectif est de trouver la meilleure configuration qui maximise le \emph{rappel} de la classe \emph{oui} (i.e minimiser le nombre de messages devant être classés comme \emph{"oui"} et qui sont classés comme \emph{"non"}). De la même manière, le classifieur utilisé pour le $2^e$ niveau doit être capable de maximiser le \emph{rappel} de la classe de plus haut niveau (i.e niveau 4 dans le cas d'une classification sur 5 classes et niveau 1 dans le cas d'une classification binaire du niveau de risque). Il est important de bien classer un message présentant un haut niveau de risque pour être sûr de réagir à un tel message. Afin de réaliser le principe d'ensemble learning, cinq classifieurs  (\emph{J48}, \emph{JRip}, \emph{SMO}, \emph{Naive Bayes}, \emph{IB1}) sont utilisés pour chaque prédiction grâce à l'outil Weka \cite{hall2009weka}. La validation est effectuée par validation croisée en mode Leave-one-out.
+
+\subsubsection{Levée d'une alerte}
+
+La levée d'alerte doit traiter les messages d'un utilisateur en même temps. Pour cela, l'intégralité des messages associé à un niveau de risque est transmis au module 3. On admet que chaque utilisateur à présenté un risque (i.e. une alerte doit être levé dans la séquence de messages). Pour cela, nous imposerons que le message correspondant à l'instant de la levée d'alerte ne peut être le premier message posté n'ayant aucune indication de l'état "normal" de la personnes à cet instant précis. De plus, dans le cas où plus messages seraient qualifiable de \emph{message le plus à risque}, le plus ancien est retenu afin de réagir le plus vite possible à un risque de passage à l'acte.
+
+
+\paragraph{Estimation des pertes : } L'estimation des pertes est évalué grâce au calculs présentés dans la partie précédente.
+
+\paragraph{ROGER : } L'algorithme présente directement, de part les scores attribués aux messages, le message le plus probable d'être à risque.
+
+\paragraph{Règles expertes : } Chaqu'une des $4$ règles est testée sur chaque message. Le message ayant répondu positivement au maximun de règle est qualifié de message le plus à risque.

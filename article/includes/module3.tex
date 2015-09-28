@@ -1,0 +1,10 @@
+%*** SUBSECTION "Module d'estimation des pertes" ***
+\subsection{Module 3 : levée d'une alerte}\label{module3}
+
+Pour la levée d'une alerte, nous avons décidé de comparer 3 modèles : 1) un modèle de dérive des concepts via l'estimation classique des pertes  en \textit{concept drift} (voir  section  \ref{pertes}); 2) un modèle par comparaison de courbe ROC (voir  section \ref{roc}); 3)  un modèle basé sur des règles expertes telles que fournies par l'association partenaire (voir  section  \ref{regles}).
+
+\input{./includes/module3_Estimations_des_pertes.tex}
+\input{./includes/module3_ROGER.tex}
+\input{./includes/module3_Regles_expertes.tex}
+
+%En sortie de ce module, quelque soit les variantes implémentées, nous obtenons la levée ou non d'une alerte pour un individus, le message ayant sucité la levée de l'alerte, les annotations en terme de concept et de risque (issue du module 2) qui vont aider le professionnel de santé à prendre la décision d'intervenir ou non.

@@ -1,0 +1,56 @@
+\subsubsection{Modèle basé sur l'estimation des pertes}\label{pertes}
+
+La plupart des algorithmes de \emph{concept drift} \cite{Gama2014} considèrent des tâches pour lesquelles on connait, à un certain moment, la vraie valeur associée aux données à prédire. Par exemple, pour des relevés de températures, on peut prédire des valeurs puis mesurer la vraie valeur que l'on peut comparer aux prévisions pour estimer les pertes, c'est-à-dire l'écart entre la prédiction et la vérité et lever une alerte si les pertes sont trop élevées (i.e les prédictions sont trop souvent fausses). Dans notre cas, la "vérité" n'est pas disponible sans intervention du professionnel de santé que l'on souhaite minimiser. Nous avons donc adapté le calcul réalisé par \cite{Bach2010} pour estimer les pertes à un instant donné en considérant le taux d'accord entre les classifieurs (i.e on compte le nombre de classifieurs ayant réalisé la même prédiction).
+
+Soit une fenêtre $\mathcal{F}$ glissante contenant les $N$ derniers exemples de l'utilisateur (lors de l'arrivée d'un nouveau message, le plus ancien est supprimé). Le $1^{er}$ et le $N^e$ exemples décrivent respectivement le message le plus ancien et le plus récent.
+Le taux d'erreur $\delta$ au temps $t$, noté $\delta_t$ est donné par :
+\[
+\delta_t = \frac{\sum\limits_{i=1}^N bienClasse(i)}{N}
+\]
+
+où $bienClasse(i)$ retourne le taux d'accord de la prédiction retenue (i.e le nombre de classifieurs ayant prédit le niveau retenu sur le nombre de classifieurs). 
+
+Cependant, il est important de pondérer l'instant dans le temps d'une erreur de classement. Pour cela, un système d'\emph{oubli progressif} (\cite{Chandramouli}) est mis en place. Ainsi, chaque erreur est coefficientée selon son ancienneté :
+\[
+\delta_t = \frac{\sum\limits_{i=1}^N (bienClasse(i)*\frac{i}{N})}{\frac{N+1}{2}}
+\]
+
+Les $N$ dernières valeurs $\delta$ sont mémorisées, soit le $\delta$ associé à chacun des $N$ messages précédemment nommés. 
+Une alerte est levée si la moyenne des $N$ $\delta$ dépasse un seuil $\Delta$ fixé par l'utilisateur. Si c'est le cas, l'ensemble des $N$ valeurs $\delta$ sont transmises au module de détection de changement pour calculer le temps pour lequel le changement a eu lieu et lancer une procédure d'alerte auprès du psychiatre référent. 
+
+Pour l'interprétation du professionnel de santé, il est important de lui pointer le temps où un concept est apparu pour l'aider dans son analyse.
+Si une dérive du modèle est constatée, il faut réapprendre un nouveau modèle à partir de ce moment. Pour cela, on cherche $\Omega$ tel que :
+\begin{itemize} 
+\item $\Omega$ soit l'indice de l'exemple parmi l'ensemble des $N$ exemples. Soit $1 \leq \Omega \leq N$;
+\item La différence des moyennes des valeurs d'estimation des pertes des sous-ensembles définit par les bornes $[1,\Omega-1]$ et $[\Omega,N]$ soit maximale.
+\end{itemize}
+
+Ainsi, l'algorithme~\ref{algo:cd}, que nous proposons, donne le temps $t$ où le changement de concept est le plus plausible. Afin de déterminer au mieux l'instant du changement de comportement.
+
+\begin{algorithm}
+\DontPrintSemicolon
+\Donnees{Une fenêtre glissante $\mathcal{F}=\{\delta_1, \delta_2, \ldots, \delta_N\}$ de valeurs numériques}
+\Res{L'indice $\Omega$ qui maximise l'écart de moyenne entre les sous-ensembles $\mathcal{F}_1$ et $\mathcal{F}_2$ bornés respectivement par $[1,\Omega-1]$ et $[\Omega,N]$}
+$\Omega \gets 1$\;
+$diff_\Omega \gets 0$\;
+\Pour{$i \gets 2$ \textbf{à} $N$} {
+	$somme_1 \gets 0$\;
+	\Pour{$j \gets 1$ \textbf{à} $i-1$} {
+    	$somme_1 = somme_1+ \mathcal{F}_{j}$\;
+    }
+    $moyenne_1 \gets \frac{somme_1}{i-1}$\;
+    
+    $somme_2 \gets 0$\;
+	\Pour{$j \gets i$ \textbf{à} $N$} {
+    	$somme_2 = somme_2+ \mathcal{F}_{j}$\;
+    }
+    $moyenne_2 \gets \frac{somme_2}{(N-i)+1}$\;
+  \Si{$diff_\Omega < |moyenne_1-moyenne_2|$} {
+    $\Omega = i$\;
+    $diff_\Omega = |moyenne_1-moyenne_2|$\;
+  }
+}
+\Retour{$\Omega$}\;
+\caption{{\bsc{Detection du temps de Changement}}}
+\label{algo:cd}
+\end{algorithm}

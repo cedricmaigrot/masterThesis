@@ -1,0 +1,89 @@
+%\documentclass[a4paper,french]{rnti}
+
+\documentclass[a4paper,pagenum,french]{rnti}
+
+\usepackage{graphicx}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{url}
+
+
+\usepackage{amsmath,amsfonts,dsfont,amssymb,bm}
+\usepackage{graphicx}
+\usepackage[linesnumbered,ruled,vlined,french]{algorithm2e}
+\usepackage{amsthm}
+\usepackage{makeidx}
+\usepackage{xcolor}
+\usepackage{multicol}
+\newtheorem{mydef}{Définition}
+\theoremstyle{remark}
+%\renewcommand{\emph}{\textbf}
+\newenvironment{exemple}{%
+\upshape Exemple: % Environnement quote
+    \small     % ... en plus petit
+}{%
+}
+
+% Titre court pour entête
+\titrecourt{Prévention du risque de suicide grâce au Concept-drift}
+
+\nomcourt{C. Maigrot et al.}
+
+\titre{Prévention du risque de suicide dans les réseaux sociaux : Application de méthodes de Concept drift}
+
+\auteur{Cédric Maigrot\affil{1},
+        Sandra Bringay\affil{2}\affilsep\affil{3},
+        Jérôme Azé\affil{2}}
+
+\affiliation{
+    \affil{1}IRISA Rennes, UMR 6074\\
+    Cedric.Maigrot@irisa.fr\\
+    %
+    \affil{2}LIRMM, CNRS, UMR 5506\\
+    \{Sandra.Bringay, Jerome.Aze\}@lirmm.fr\\
+    %
+    \affil{3}AMIS, Université de Montpellier Paul Valéry\\
+    %
+ }
+
+\resume{%
+Le suicide devient d'année en année une problématique plus préoccupante. Les organismes de santé tels que l'OMS se sont engagés à réduire le nombre de suicides de 10\% dans l'ensemble des pays d'ici 2020. 
+Le suicide est souvent un geste impulsif cependant il existe souvent des comportements et des paroles qui peuvent révéler un mal être et représenter des signes précurseurs de prédispositions au suicide. L'objectif de cette étude est de mettre en place un système pour détecter semi-automatiquement ces comportements et ces paroles au travers des réseaux sociaux.
+Des travaux précédents \cite{Abboute2014} ont proposé la classification de messages issus de Twitter suivant des thèmes liés au suicide : tristesse, blessures psychologiques, état mental,  etc. Dans cette étude, nous ajoutons la dimension temporelle pour prendre en compte l'évolution de l'état des personnes monitorées. Nous avons implémenté pour cela différentes méthodes d'apprentissage dont une méthode originale de \textit{concept drift}. Nous avons expérimenté avec succès sur des jeux de données réelles issues du réseau social Facebook.
+%
+}	
+
+\summary{%
+Suicide has long been a worrisome problem for society and is an event that has 
+far-reaching effects.  Health organizations such as the World Health Organization (WHO) 
+and the French National Observatory of Suicide (ONS) have pledged to reduce the 
+number of suicides by 10\% in all countries by 2020.  While suicide is a very marked 
+event, there are often behaviors and words that can act as early signs of predisposition to 
+suicide.  The objective of this internship is to develop a system that semi-automatically 
+detects these markers through social networks.  Previous work [1] has proposed the 
+classification of Tweets using vocabulary in topics related to suicide: sadness, 
+psychological injuries, mental state, depression, fear, loneliness, proposed suicide 
+method, anorexia, insults, and cyber bullying.  
+During this training period, we add a new dimension,  time to reflect changes in the status of monitored people. We implemented it with different learning methods including an original   \textit{concept drift} method. We have successfully experienced this method  on synthetic and real data sets issued from the  Facebook networks.
+%
+}
+
+
+\begin{document}
+
+\input{./includes/introduction.tex}
+\input{./includes/etat_de_lart.tex}
+\input{./includes/methodologie.tex}
+\input{./includes/protocole.tex}
+\input{./includes/resultats.tex}
+
+\section{Remerciements}
+Nous tenons à remercier l'Organisme Arret Demandé International, ainsi que le CHU de Montpellier pour le temps qu'ils nous ont accordés, mais aussi pour les aides précieuses dont ils ont fait preuve rendant cette étude possible.
+
+\bibliographystyle{rnti}
+\bibliography{Stage}
+
+% \appendix
+% \section*{Annexe}
+
+\end{document}

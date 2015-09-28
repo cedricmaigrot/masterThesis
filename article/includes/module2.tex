@@ -1,0 +1,73 @@
+%*** SUBSECTION "Module d'apprentissage" ***
+\subsection{Module 2 : détection du niveau de risque en 2 étapes}\label{module2}
+
+Le module de détection du niveau de risque se déroule en 2 étapes.
+Nous avons choisi de travailler en respectant le paradigme de l’ensemble learning qui consiste à apprendre plusieurs classifieurs dans le but de résoudre le même problème.
+%Les premiers travaux consacrés à l’ensemble learning datent des années 1990  (\textbf{\cite{Hancock1990, Wolpert1992, Krogh1995, Aze2012}}). Par opposition à l’apprentissage “classique” où un seul classifieur est appris, l’ensemble learning apprend un ensemble de classifieurs qui sont ensuite combinés pour obtenir un méta-classifieur. 
+
+Nous nous sommes placés dans ce paradigme pour les quatre raisons suivantes : 1) la combinaison de classifieurs donne en général de meilleurs résultats (\cite{wang2003mining}); 2) la puissance de calcul à notre disposition rend accessible l’apprentissage et l’utilisation de nombreux modèles pour résoudre le même problème ; 3) les  masses de données à traiter  pourraient s’avèrer  non apprenables par un unique classifieur;
+4) le besoin d'expliciter les résultats de la classification pour les humains impliqués dans le processus de prise de décision. %Nous reviendrons sur ces trois éléments lors de l'évaluation de notre méthode.
+
+Diverses formes d’ensemble learning peuvent être citées : \emph{Stacking}, \emph{Boosting} et \emph{Bagging}. 
+%Elles divergent principalement par la fonction d’aggrégation mise en œuvre pour obtenir le méta-classifieur. Ces divergences peuvent avoir un impact sur l’apprentissage : modification des exemples pendant l’apprentissage (Stacking), modification de l’importance relative des exemples (Boosting); ou uniquement en post-traitement de l’apprentissage pour combiner les différents modèles appris (Bagging).
+Dans notre contexte, nous avons choisi l'approche \emph{Stacking} qui consiste à apprendre une succession de classifieurs organisés en  deux niveaux et aggrégés selon un vote majoritaire et tels que chaque classifieur apprenne de nouveaux descripteurs permettant de redécrire les données.
+
+Nous détaillons dans la suite ces deux étapes dans les sections  \ref{etape1} et  \ref{etape2}.
+
+\subsubsection{Première étape : détection des concepts dans un message}\label{etape1}
+
+La première étape permet de repérer dans les messages un premier niveau d'information :   la présence ou l'absence d'un signal de mal-être que nous nommerons par la suite \emph{concept}. La liste des \emph{concepts} considérés est: \emph{précédente tentative de suicide}, \emph{idéations suicidaires}, \emph{dépression}, \emph{harcèlement}, \emph{prise aux médicaments}, \emph{problème d'alimentation} (anorexie ou boulimie), \emph{auto-mutilation}, \emph{colère}, \emph{peur}, \emph{solitude}, \emph{tristesse} et  \emph{rémission}. Cette liste issue des travaux de \cite{Plutchik1994} a été validée par des experts psychiatres. Pour chaque concept, un classifieur renvoie la valeur \emph{oui} ou \emph{non} pour associer la présence ou l'absence du concept dans le message. 
+Nous avons choisi  les descripteurs résumés ci-dessous que nous avons complétés avec des lexiques spécifiques pour chaque concept. 
+
+%\section{Caractéristiques utilisées} \label{caracteristiques}
+%*** SUBSECTION "Caractéristiques provenant de Facebook" ***
+%\subsection{Caractéristiques provenant de Facebook}
+%Plusieurs informations pouvant déterminer le niveau de risque d'un exemple proviennent directement de Facebook. Leur prise en compte est donc indispensables à une bonne classification : 
+\begin{itemize}
+
+\item Contenu du message décrit par les mesures statistiques suivantes : 1) un ensemble de N-grammes pour permettre une comparaison entre les messages sélectionnés selon la mesure \emph{TF-IDF} pour ne conserver que les mots discriminants par concepts ; % \textbf{Moins qu'à son habitude}\\ 
+%2)  la présence d'élément subjectifs dans la phrase : nous avons réutilisé la chaîne de traitements produite dans l'équipe \cite{Abdaoui2015} qui classe les phrases dans les catégories \textit{information}  (e.g. partage d'un lien relatant une histoire de harcèlement) ou \textit{subjective} (e.g.  confidence de la victime sur un harcèlement subit plus tôt dans la journée);
+%3) le nombre de mots de polarité(s) (\textit{négatif, positif ou neutre}) et d'émotion(s) (\textit{joie, colère, etc.}) : l'apparition des sentiments dans les récits est fréquent voir omni-présente. La \emph{peur} est le sentiment le plus  souvent rencontré avec la \emph{tristesse} et la \emph{colère} (voir annexe \ref{annexe_sentiments}). Nous avons utilisé le lexique \cite{Abdaoui2014} produit dans l'équipe et décrit dans l'annexe \ref{annexe_feel} ; 
+%\item    Polarité des commentaires d'un exemple & Pour compléter l'orientation d'un message, la mesure définissant la polarité majoritaire des commentaires est définie. La polarité peut est positive, négative ou neutre. Pour cela, on utilise un module externe réalisé au sein de l'équipe [REF]\textbf{Ref Amine et Mike}.\\
+ %La notion d'estimation du niveau de risque ne porte que sur le second cas car seul ce type de message décrit l'état de la victime. Il est donc intéressant de pouvoir repérer les messages n'apportant qu'une information.
+2) le nombre de mots associés à un concept donné par un lexique réalisé pour l'étude.
+\item Nombre de commentaires : un message à risque est suceptible de soulever beaucoup de réactions auprès des autres membres du groupe ;
+\item Nombre de mentions \emph{Likes} : à l'inverse, un message où la victime évoque son bien-être ou son rétablissement peut être accompagné de beaucoup de mentions \emph{Likes} ;
+\item Longueur du message : deux comportements opposés des victimes sont connus \textcolor{red}{REF}. La victime peut écrire des messages plus longs par besoin de se confier aux autres ou au contraire se refermer sur elle-même et moins écrire;
+
+%\item    Niveau de risque des messages précédents : %le passé de la victime est important  car une personne étant déjà passée à l'acte est plus susceptible de recommencer.  
+%Si les exemples précédents ont un haut niveau de risque, un risque de passage à l'acte est plus plausible. Pour calculer la valeur de cette caractéristique, la moyenne du niveau des anciens messages est calculé mais d'autres approches pourraient être testées (e.g. nombre de messages de chaque niveau).
+\end{itemize}
+
+
+
+En sortie de cette étape, un message est associé à un vecteur de concepts dans lesquels on stocke un booléen.
+Par exemple, le message "\textit{Je vais tres mal, aidez moi vite svp. Je me fais harcelee depuis 3ans et me fais frapper tous les jours. Je mappelle lea, jai 14ans et vis a roubaix}" est associé au vecteur 
+(
+$\overline{\mbox{\emph{tentative de suicide}}}$, 
+$\overline{\mbox{\emph{idéations suicidaires}}}$,
+$\overline{\mbox{\emph{dépression}}}$,
+\emph{harcèlement},
+$\overline{\mbox{\emph{médicaments}}}$,
+$\overline{\mbox{\emph{anorexie}}}$,
+$\overline{\mbox{\emph{mutilation}}}$,
+$\overline{\mbox{\emph{colère}}}$,
+\emph{peur},
+$\overline{\mbox{\emph{solitude}}}$,
+\emph{tristesse},
+$\overline{\mbox{\emph{rémission}}}$
+).
+
+%\paragraph{Présence d'un élément complémentaire au message (lien, photo, etc. )} : Certaines personnes postent une photo pour accompagner 
+
+
+%*** SUBSECTION "Caractéristiques calculés" ***
+%\subsection{Caractéristiques calculées} 
+%Afin de compléter la liste des caractéristiques définissant un exemple, d'autres caractéristiques sont calculées en se basant sur les caractéristiques précédemment citées.
+
+
+\subsubsection{Deuxième étape : calcul du niveau de risque pour un message}\label{etape2}
+
+La seconde étape utilise les sorties de la première étape comme descripteurs pour prédire le niveau de risque des messages. Les niveaux de risque sont répartis sur cinq niveaux représentant les messages non à risque (niveau 0), présentant un ancien risque (niveau 1), à risque faible (niveau 2), à risque modéré (niveau 3), à risque élevé (niveau 4).
+
+Les $5$ niveaux de risque en sortie étant difficiles à interpréter en terme de levée d'alerte, nous avons simplifié le problème en prédisant $2$ niveaux de risque après regroupement des niveaux 0 et en \textit{risque faible} ainsi que 2, 3 et 4 en \textit{risque élevé}.

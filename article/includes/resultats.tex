@@ -1,0 +1,68 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Expérimentations sur des données réelles}\label{expe}
+
+\subsection{Détection du niveau de risque ($1^{ere}$ étape)}
+
+Cette première couche de détection, qui utilise les informations provenant de Facebook ainsi que les résultats des prétraitements, détermine la présence ou non des $12$ concepts. Par manque de place, nous présentons les résultats des concepts \emph{Harcèlement},\emph{Peur} et \emph{Solitude}.
+La première constation est que chaque classifieur s'adapte différement selon les concepts (e.g. \emph{Naive Bayes} est efficace sur la détection du harcèlement, alors que la peur et la solitude sont mieux captés par l'algorithme \emph{J48}). 
+
+\begin{table}[htb]
+\center\small
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lccc}
+\hline\hline
+& Harcèlement & Peur & Solitude\\
+\hline
+J48
+& 47,1\% \footnotesize{(64,8\%)} &  \textbf{60,0\% \footnotesize{(89,6\%)}} &  \textbf{61,5\% \footnotesize{(86,1\%)}} \\
+Naive Bayes
+& \textbf{54,9\% \footnotesize{(70,0\%)}} & 52,0\% \footnotesize{(82,4\%)} & 53,8\% \footnotesize{(88,2\%)} \\
+IB1
+& 05,8\% \footnotesize{(59,1\%)} & 24,0\% \footnotesize{(82,0\%)} & 30,8\% \footnotesize{(82,5\%)} \\
+JRip
+& 27,5\% \footnotesize{(62,0\%)} & 40,0\% \footnotesize{(84,0\%)} & 53,8\% \footnotesize{(88,7\%)} \\
+SMO 
+& 37,3\% \footnotesize{(70,2\%)} & 56,0\% \footnotesize{(90,5\%)} & 34,6\% \footnotesize{(83,8\%)} \\
+Vote 
+& 29,4\% \footnotesize{(69,8\%)} & 48,0\% \footnotesize{(88,9\%)} & 46,2\% \footnotesize{(86,7\%)} \\
+\hline
+\end{tabular*}
+\caption{Résultat des classifieurs sur la détection du harcèlement, de la peur et de la solitude}
+\label{tab_precision_concept}
+\end{table}
+
+\subsection{Détection du niveau de risque ($2^{eme}$ étape)}
+
+Les six classifieurs sont ensuite appliqués à la seconde couche de prédiction (prédiction du niveau de risque). Pour cela, 4 tests sont réalisés : une prédiction binaire et une prédiction en cinq niveaux de risque dans le cas d'une prédiction à partir des concepts et dans le cas d'une classification directement à partir des messages Facebook. Le tableau \ref{tab_precision_niveau} présente ces résultats par les deux mesures retenues pour différencier les classifieurs : en premier le rappel sur le niveau le plus à risque, et en cas d'égalité la F-Mesure globale (entre parenthèse dans le tableau). Une première constatation non surprenante est que la classification binaire obtient de meilleures résultats que la classification en 5 niveaux de risque. De plus, on remarque que notre choix de modèle Stacking obtient de meilleures résultats que la prédiction directe depuis les messages Facebook. En effet, certains classifieurs obtiennent un rappel très élevé sur ce test (e.g. IB1 pour la prédiction directe en cinq niveaux de risque) mais cela est obtenu en classant une grande majorité des messages dans la classe de niveau le plus élevé, ce qui ne se révèle pas efficace en réalité comme le montre le score de F-Mesure associé (e.g. 6,6 \%)
+
+\begin{table}[htb]
+\center\small
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lcccc}
+\hline\hline
+& 2 niveaux (Stacking) & 5 niveaux (Stacking) & 2 niveaux (Direct) & 5 niveaux (Direct) \\
+\hline
+J48
+& 92,6\% \footnotesize{(89,2\%)} & 83,3\% \footnotesize{(59,2\%)} 
+& 70,4\% \footnotesize{(57,8\%)} & 23,3\% \footnotesize{(25,5\%)}\\
+Naive Bayes
+& 88,9\% \footnotesize{(85,7\%)} & 73,3\% \footnotesize{(44,5\%)} 
+& \textbf{99,1\% \footnotesize{(50,0\%)}} & 26,7\% \footnotesize{(29,8\%)}\\
+IB1
+& 88,0\% \footnotesize{(80,1\%)} & 73,3\% \footnotesize{(50,1\%)} 
+& 47,2\% \footnotesize{(53,2\%)} & \textbf{96,7\% \footnotesize{(06,6\%)}}\\
+JRip
+& 92,6\% \footnotesize{(92,6\%)} & \textbf{83,3\% \footnotesize{(92,6\%)}} 
+& 70,4\% \footnotesize{(92,6\%)} & 23,3\% \footnotesize{(92,6\%)}\\
+SMO 
+& 90,7\% \footnotesize{(87,5\%)} & 83,3\% \footnotesize{(51,8\%)} 
+& 80,6\% \footnotesize{(62,5\%)} & 06,7\% \footnotesize{(16,5\%)}\\
+Vote 
+& \textbf{96,6\% \footnotesize{(89,0\%)}} & 83,3\% \footnotesize{(57,1\%)} 
+& 78,7\% \footnotesize{(63,7\%)} & 92,3\% \footnotesize{(13,4\%)}\\
+\hline
+\end{tabular*}
+\caption{Résultat des classifieurs sur la couche de détection du niveau de risque}
+\label{tab_precision_niveau}
+\end{table}
+
+\subsection{Levée d'une alerte}

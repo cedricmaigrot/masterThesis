@@ -1,0 +1,18 @@
+%=====
+%===== SECTION "Architecture du projet" =====
+%=====
+\section{Processus global de surveillance des individus}\label{Methodes}
+
+
+Le processus  de surveillance des patients est inspiré globalement des méthodes de \textit{concept drift} qui permettent de capturer l'apparition de nouveaux concepts au cours du temps. Nous avons repris l'architecture de \cite{Gama2014} que nous avons modifié pour intégrer le fait que nous ne connaissons pas la véritable nature des données (niveau de risque à prédire) sans intervention du professionnel de santé et pour intégrer des règles expertes pour la levée d'alerte. 
+
+Le processus est organisé  en  $3$ modules indépendants décrit comme suit :
+1) la mémorisation et le prétraitement des messages (voir Section \ref{module1});
+2) la détection du niveau de risque associé à un message (voir Section \ref{module2});
+3) la levée d'alerte (voir Section \ref{module3}).
+
+Les deux premiers modules font une analyse individuelle des messages, le troisième récupère alors les messages d'un même utilisateur afin de les comparer pour lever ou non une alerte.
+
+\input{./includes/module1.tex}
+\input{./includes/module2.tex}
+\input{./includes/module3.tex}

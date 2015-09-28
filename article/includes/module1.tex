@@ -1,0 +1,22 @@
+%*** SUBSECTION "Module de mémorisation des données" ***
+\subsection{Module 1 : mémorisation des messages et prétraitements}\label{module1}
+
+L'objectif de ce module est de mémoriser pour chaque personne monitorée :
+%La mémorisation des messages est nécessaire car lors de la classification d'un message, les anciens messages du même auteur peuvent avoir de l'importance. Ainsi, lors de la réception d'un nouveau message, il faut être capable de déterminer le niveau de risque des anciens messages.
+%Lors de la mémorisation des exemples, le module mémorise toutes les informations liées à l'exemple :
+\begin{itemize}
+\item le groupe Facebook auquel elle appartient ainsi que la thématique du groupe (e.g. tentative de suicide, harcèlement, anorexie, etc);
+\item le contenu de ses messages,  la date et l'heure de l'écriture des messages, le nombre de mentions \emph{likes}, le nombre de commentaires;
+\item les commentaires associés à un message;
+\end{itemize}
+
+Il est important de noter que cette démarche est aussi applicable à de nombreux autres réseaux sociaux (e.g Twitter, Instagram, Ask... ).
+
+Comme indiqué par \cite{Balahur2013}, les textes issus des réseaux sociaux ont des particularités linguistiques qui peuvent influencer les performances de la classification. Pour cette raison nous avons appliqué les prétraitements suivants :
+1) remplacement des noms d'utilisateurs par [NOM];
+2) remplacement des adresses mails par [MAIL];
+3) remplacement des adresses URL par [URL];
+4) remplacement des émoticônes par un mot d'humeur associé (table de correspondance créée pour l'étude);
+5) remplacement des abréviations par le(s) mot(s) complet(s) (table de correspondance créée pour l'étude);
+6) suppression des accents et des majuscules, en effet certaines personnes n'utilisent pas ces deux conventions d'écritures sur les réseaux sociaux afin d'écrire plus vite. Leur normalisation en minuscules sans accent permet alors de restreindre le nombre de N-Grammes générés et ainsi faire le lien entre des messages ne présentant par avant aucun N-Grammes;
+7) lemmatisation de tous les mots en utilisant l’outil TreeTagger (\cite{Schmid1994}).

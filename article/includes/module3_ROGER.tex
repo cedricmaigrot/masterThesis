@@ -1,0 +1,23 @@
+\subsubsection{Modèle basé sur la comparaison de courbe ROC}\label{roc}
+
+% Nous avons ici reformuler le problème pour lever une alerte quand on trouve au moins un message posté par l'utilisateur  tel que le niveau de risque associé à ce message soit élevé. Pour atteindre cet objectif, plusieurs approches peuvent être mise en \oe uvre : apprentissage de classifieurs pour le niveau de risque (classification), apprentissage d'une fonction permettant d'associer un risque à chaque message (régression) ou encore apprentissage d'une fonction permettant d'ordonner les messages par risque croissant.
+
+% L'approche que nous allons présenter ici relève de ce dernier cas d'utilisation.
+% Nous allons utiliser l'algorithme ROGER (ROc based Genetic learnER) initialement proposé en 2003 dans le cadre de la prédiction du risque cardio-vasculaire \cite{SebagAzeLucas:ICDM2003,SebagLucasAze:EA2003,Challenge_PKDD03}.
+% Cet algorithme a été adapté et utilisé avec succès dans plusieurs autres cadres applicatifs : l'extraction de la terminologie \cite{Aze_ROCML:2005}, de la prédiction d'interactions entre protéines \cite{deVienne-Aze_PLoSOne:2012} ou encore de la prédiction de complexes protéines-protéines \cite{PLoSOne:2011}.
+
+% L'algorithme ROGER apprend des fonctions de la forme : $f({\bm x_i}) = \sum_j w_j \times {\bm x_i}(j)$ où ${\bm x_i}(j)$ représente la valeur de la  $j^{ème}$ composante de l'exemple ${\bm x_i}$.
+% L'algorithme apprend les poids $w_j$ tels que $\sum_i rang_f({\bm x_i}) \times \mathds{1}_{y_i = +1}$ soit minimale (où $rang_f({\bm x_i})$ correspond au rang de l'exemple ${\bm x_i}$ induit par la fonction $f$, et $\mathds{1}_{y_i = +1}$ correspondant à la fonction indicatrice qui vaut 1 si la classe de ${\bm x_i}$ est positive et 0 sinon).
+
+% Il est aisé de montrer qu'une fonction maximisant l'aire sous la courbe ROC minimise la somme des rangs des exemples positifs qu'elle ordonne.
+
+La  \textbf{courbe ROC} (Receiver Operating Characteristic) \cite{RocLift:2006,ROC:1978} représente un classifieur ayant la capacité de séparer parfaitement les positifs des négatifs.
+
+Nous allons utiliser l'algorithme ROGER (ROc based Genetic learnER) initialement proposé en 2003 dans le cadre de la prédiction du risque cardio-vasculaire \cite{SebagAzeLucas:ICDM2003,SebagLucasAze:EA2003,Challenge_PKDD03}. Cet algorithme a été adapté et utilisé avec succès dans plusieurs autres cadres applicatifs : l'extraction de la terminologie \cite{Aze_ROCML:2005}, de la prédiction d'interactions entre protéines \cite{deVienne-Aze_PLoSOne:2012} ou encore de la prédiction de complexes protéines-protéines \cite{PLoSOne:2011}.
+
+L'algorithme ROGER apprend des fonctions de la forme : $f({\bm x_i}) = \sum_j w_j \times {\bm x_i}(j)$ où ${\bm x_i}(j)$ représente la valeur de la  $j^{ème}$ composante de l'exemple ${\bm x_i}$.
+L'algorithme apprend les poids $w_j$ tels que $\sum_i rang_f({\bm x_i}) \times \mathds{1}_{y_i = +1}$ soit minimale (où $rang_f({\bm x_i})$ correspond au rang de l'exemple ${\bm x_i}$ induit par la fonction $f$, et $\mathds{1}_{y_i = +1}$ correspondant à la fonction indicatrice qui vaut 1 si la classe de ${\bm x_i}$ est positive et 0 sinon).
+
+
+Dans notre contexte, ROGER permet d'apprendre à ordonner les messages des utilisateurs par risque décroissant.
+Sous l'hypothèse qu'il existe au moins un \textit{concept drift} par utilisateur, nous considérons que le message le plus à risque (prédit par ROGER) est le message correspondant au drift.

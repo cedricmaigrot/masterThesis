@@ -1,0 +1,27 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%    chapitre INTRODUCTION  %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+
+Toutes les 40 secondes, une personne se suicide quelque part dans le monde\footnote{Prévention du suicide, L'état d'urgence mondial. OMS 2014. ISBN: 978 92 4 256477 8}. Toutes les régions et toutes les  tranches d’âge sont touchées, notamment  les jeunes âgés de 15 à 29 ans, pour qui le suicide est la deuxième cause de mortalité à l’échelle mondiale. Les méthodes proposées dans cette étude visent la prévention du suicide pour cette catégorie de personnes qui utilisent en majorité quotidiennement les réseaux sociaux. 
+ 
+L'objectif de cette étude est de détecter les personnes à risques grâce aux messages laissés sur les réseaux sociaux (Twitter, Facebook, etc.).  Ce travail fait suite à la méthode décrite dans \cite{Abboute2014} qui permet d'associer à un message un niveau de risque. Dans cette étude, la méthode proposée se distingue en intégrant la dimension temporelle associée à l'évolution de l'état de la personne monitorée qui est capturée au travers de sa séquence de messages.
+
+Nous avons adapté un modèle de \emph{concept drift} \cite{Gama2014} pour détecter ces changements d'états. L'idée est ici de  lever une alerte lorsque l'on détecte une évolution interprétée comme négative des messages au plus tôt mais sans solliciter abusivement le médecin qui sera le seul habilité à prendre la décision d'intervenir ou pas. 
+
+Ce modèle intègre 3 modules : 
+1) Prétraitement et mémorisation des messages avec notamment l'utilisation de différentes méthodes de Traitement Automatique de la Langue Naturelle (TALN) pour extraire des descripteurs pertinents des messages; 
+2) Détection du niveau de risque des messages à partir d'une méthode ensembliste de classification (Stacking). 
+3) Levée d'une alerte  à destination du psychiatre avec explication sur les raisons de la levée de l'alerte basée sur les résultats des étapes précédentes. La levée d'alerte est issue d'un calcul statistique sur la dérive d'un concept ou sur l'application de règles expertes	ou encore sur la comparaison de courbe ROC (\cite{hanley1982meaning}).
+
+ Les challenges associés à ces travaux sont nombreux. Tout d'abord,  les méthodes de TALN doivent être adaptées pour traiter les données particulières issues des réseaux sociaux. %Les personnes ne maitrisant pas  l'orthographe et  la grammaire française lors de l'écriture des messages, les analyses syntaxico-sémantiques sont souvent faussées. 
+ De plus, les techniques de \emph{concept drift} doivent  détecter des concepts  relativement subjectifs (\textit{e.g.}  anorexie,  dépression). \`A notre connaissance, il n'existe pas de ressources linguistiques comme des lexiques étoffés pour capturer ces concepts. 
+ Les techniques doivent passer à l'échelle car le nombre de messages produits peut être très important. 
+Le résultat du processus doit être clairement explicité au professionnel de santé afin de l'aider dans le processus de décision.
+La mise à disposition des résultats des algorithmes de classification seuls n'est clairement pas suffisante.
+
+Des études similaires ont déjà été réalisées (\textcolor{red}{REF}), cependant celle-ci se démarque à plusieurs niveaux. Tout d'abord, le travail réalisé se base sur les récits de personnes  ayant des comportements à risques avérés. Il s'agit de mails  transmis par l'Organisation Arrêt Demandé International \textit{OADI}\footnote{\url{http://oadi.education/}} travaillant sur les personnes harcellées et identifiées à risque par l'organisation et de messages récupérés sur les groupes Facebook traitant de thématiques à risque. Le processus mis en place prend en compte plusieurs niveaux de description : celui des concepts à risque évoqués dans un message (e.g. expression de la solitude, d'idéation suicidaire, récit de comportement anorexique, etc.), celui du niveau de risque défini selon le protocole de notre partenaire (l'association \textit{OADI}) et celui de l'alerte à transmettre ou non à l'équipe médicale chargée du monitoring.
+
+ Les quatres contributions principales de cette étude sont : 1) la production d'une chaîne de traitements basée sur une technique de \textit{concept drift} qui prend en compte l'évolution des messages des personnes monitorées et non d'un seul message ; 2) la classification des messages selon 12 concepts, et 5 niveaux de risque en se basant  sur une méthode   ensembliste de classification (Stacking); 3) la constitution de lexiques spécialisés pour améliorer le premier niveau de description et l'utilisation d'un lexique de sentiments développé dans l'équipe; 4) des expérimentations sur des jeux de données réelles annotées manuellement.
+
+Le reste de l'article est organisé comme suit. La section \ref{TravauxRelatifs} présente les travaux réalisés en lien avec notre étude. La section \ref{Methodes} présente la méthodologie mise en place. La section \ref{protocole} présente le protocole expérimental mit en place. Enfin, la section \ref{expe} présente les résultats obtenus.
